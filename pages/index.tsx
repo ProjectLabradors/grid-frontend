@@ -1,6 +1,6 @@
 /** @format */
 
-import * as React from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { NextPage } from 'next';
 import Image from 'next/image';
@@ -9,6 +9,8 @@ import {
   FaLinkedin,
   FaGoogle,
   FaRegEnvelope,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import { MdLockOutline } from 'react-icons/md';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -20,6 +22,10 @@ interface IFormInput {
 }
 
 const IndexPage: NextPage = () => {
+  const [passwordShown, setPasswordShown] = useState(false);
+  const togglePasswordVisiblity = () => {
+    setPasswordShown(passwordShown ? false : true);
+  };
   const {
     register,
     handleSubmit,
@@ -114,14 +120,26 @@ const IndexPage: NextPage = () => {
                     <div className='bg-gray-200 w-64 p-2 flex items-center mb-3'>
                       <MdLockOutline className='text-gray-400 m-2' />
                       <input
-                        type='password'
+                        type={passwordShown ? 'text' : 'password'}
                         placeholder='Password'
                         className='bg-gray-200 outline-none text-sm flex-1'
                         {...register('password', {
                           required: true,
                         })}
                       />
+                      {passwordShown ? (
+                        <FaEyeSlash
+                          className='text-gray-600 m-2 hover:text-blue-500'
+                          onClick={togglePasswordVisiblity}
+                        />
+                      ) : (
+                        <FaEye
+                          className='text-gray-600 m-2 hover:text-blue-500'
+                          onClick={togglePasswordVisiblity}
+                        />
+                      )}
                     </div>
+
                     {errors?.password?.type === 'required' && (
                       <div className='text-left w-64 mb-1'>
                         {' '}
