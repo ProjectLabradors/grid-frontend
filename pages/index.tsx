@@ -15,6 +15,7 @@ import {
 import { MdLockOutline } from 'react-icons/md';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { AiOutlineWarning } from 'react-icons/ai';
+import axios from 'axios';
 
 interface IFormInput {
   email: string;
@@ -23,16 +24,31 @@ interface IFormInput {
 
 const IndexPage: NextPage = () => {
   const [passwordShown, setPasswordShown] = useState(false);
+  const [serverError, setServerError] = useState('');
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true);
   };
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    let body = {
+      email: data.email,
+      password: data.password,
+    };
+    axios
+      .post(process.env.BACKEND_URL + 'auth', body)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          setServerError('Invalid email or password');
+        }
+      });
+  };
 
   return (
     <Layout title='Login'>
@@ -86,6 +102,7 @@ const IndexPage: NextPage = () => {
                   <p className='text-gray-500 my-3'>
                     or use your email account
                   </p>
+                  {serverError && <p className='text-sm text-red-600 text-center'>{serverError}</p>}
                   <div className='flex flex-col items-center'>
                     <div className='bg-gray-200 w-64 p-2 flex items-center mb-2'>
                       <FaRegEnvelope className='text-gray-400 m-2' />
@@ -97,6 +114,7 @@ const IndexPage: NextPage = () => {
                           required: true,
                           pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         })}
+                        onKeyUp={e => setServerError('')}
                       />
                     </div>
                     {errors?.email?.type === 'required' && (
@@ -126,6 +144,7 @@ const IndexPage: NextPage = () => {
                         {...register('password', {
                           required: true,
                         })}
+                        onKeyUp={e => setServerError('')}
                       />
                       {passwordShown ? (
                         <FaEyeSlash
