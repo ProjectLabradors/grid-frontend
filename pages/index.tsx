@@ -15,6 +15,8 @@ import {
 import { MdLockOutline } from 'react-icons/md';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { AiOutlineWarning } from 'react-icons/ai';
+import NextLink from "next/link";
+import { Link as MUILink } from "@material-ui/core";
 import axios from 'axios';
 
 interface IFormInput {
@@ -196,12 +198,11 @@ const IndexPage: NextPage = () => {
                 <p className='mb-10'>
                   Fill up your information and start journey with us.
                 </p>
-                <a
-                  href='#'
-                  className='border-2 border-white rounded-full px-12 py-2 inline-block font-semibold hover:bg-white hover:text-blue-500'
-                >
-                  Sign Up
-                </a>
+                <NextLink href="register">
+                  <MUILink className="border-2 text-white border-white rounded-full px-12 py-2 inline-block cursor-pointer hover:text-blue-500 font-semibold hover:bg-white hover:no-underline">
+                    Sign Up
+                  </MUILink>
+                </NextLink>
               </div>
             </div>
           </main>
